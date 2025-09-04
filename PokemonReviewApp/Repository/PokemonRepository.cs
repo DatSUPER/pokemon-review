@@ -77,5 +77,51 @@ namespace PokemonReviewApp.Repository
 
             return saved > 0 ? true : false;
         }
+
+        public bool UpdatePokemon(int ownerId, int categoryId, Pokemon pokemon)
+        {
+            var pokemonOwnerEntity = _context.PokemonOwners.
+                Where(o => o.PokemonId == pokemon.Id).FirstOrDefault();
+
+            var OwnerEntity = _context.Owners.
+                Where(o => o.Id == ownerId).FirstOrDefault();
+
+            var pokemonCategoryEntity = _context.PokemonCategories.
+                Where(c => c.PokemonId == pokemon.Id).FirstOrDefault();
+
+            var categoryEntity = _context.Categories.Where(o => o.Id == categoryId).FirstOrDefault();
+
+            if (pokemonOwnerEntity != null && OwnerEntity != null)
+            {
+
+                _context.Remove(pokemonOwnerEntity);
+
+                var pokemonOwner = new PokemonOwner()
+                {
+                    Owner = OwnerEntity,
+                    Pokemon = pokemon,
+                };
+                _context.Add(pokemonOwner);
+            }
+
+            if (pokemonCategoryEntity != null && categoryEntity != null)
+            {
+
+                _context.Remove(pokemonCategoryEntity);
+
+                var pokemonCategory = new PokemonCategory()
+                {
+                    Category = categoryEntity,
+                    Pokemon = pokemon,
+                };
+                _context.Add(pokemonCategory);
+            }
+            else
+                return false;
+
+
+            _context.Update(pokemon);
+            return Save();
+        }
     }
 }

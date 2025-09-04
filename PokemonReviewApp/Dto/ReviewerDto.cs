@@ -8,6 +8,5 @@
 
         public string LastName { get; set; }
 
-        public ICollection<ReviewDto> Reviews { get; set; }
     }
 }
